@@ -1,7 +1,7 @@
 #ifndef SORTER_HELPER
 #define SORTER_HELPER
 
-	void bubbleSort(int numberList[], bool sortAscended);
-	void viewNumbers(int numList[]);
+	void bubbleSort(int numberList[], bool sortAscended, int size);
+	void viewNumbers(int numList[], int size);
 
 #endif
