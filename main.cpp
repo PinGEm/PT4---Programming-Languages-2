@@ -1,22 +1,24 @@
-#include <iostream>
-#include <conio.h>
-#include <limits>
-#include <ctime>
-#include <chrono>
-#include <fstream>
-#include <sstream>
-#include <filesystem>
-#include "sorter.h"
+#include <iostream> // used for input & output streams
+#include <conio.h> // used for getch()
+#include <limits> // used for garbage input
+#include <ctime> // used for the random number generator
+#include <chrono> // used to keep track of the time stamps
+#include <fstream> // used for writing log files
+#include <sstream> // used for the oss type to put the time stamp inside a string
+#include <filesystem> // used for the folder directories
+#include "sorter.h" // includes the sorter file and its function
 
-#define SORT_ASCENDED true
+#define SORT_ASCENDED true // used for file readability
 
-const int LIMIT = 1000;
+const int LIMIT = 1000; // set a limit for the range of numbers that will never be changed on runtime
 
+// using namespaces to shorten SPECIFIC use cases of std
 using std::cout;
 using std::ofstream;
 using std::cin;
 using std::chrono::system_clock;
 
+// This class handles logging user actions when they use the program.
 class Logger
 {
 	private:
@@ -34,6 +36,7 @@ class Logger
 		// When Class is Instantiated, do the following:
 		Logger()
 		{
+			std::filesystem::create_directory("Logs"); // If the "Logs" folder does not exist yet, we'll create one.
 			cout << timeStamp;
 			
 			oss << local_tm.tm_year + 1900 << '-' << local_tm.tm_mon + 1 << '-' << local_tm.tm_mday; // +1900 and +1 is there to properly set the date to now.
@@ -43,18 +46,21 @@ class Logger
 			pathFile += fileName;
 		};
 		
+		// Set the Timestamp to Whatever Time it is now
 		void setTimeStamp()
 		{
 			tt = system_clock::to_time_t(system_clock::now());
 			timeStamp = ctime(&tt);
 		};
 		
+		// Get the Timestamp Value
 		std::string getTimeStamp()
 		{
 			setTimeStamp();
 			return timeStamp;
 		};
 		
+		// Creates and Edits Existing Log Files
 		void createNewLog(std::string message, bool getNumberList = false, int numList[] = {}, int size = 0)
 		{
 			// Create the file, or append it if it exists
@@ -80,30 +86,37 @@ class Logger
 			MyFile.close();
 		};
 		
-		void displayNumberList(int numList[] = {}, int size = 0)
+		// Only called when getNumberList is true from createNewLog()
+		void displayNumberList(int numList[], int size)
 		{
+			// Iterate through each number and concatenate them inside the fullList string.
+			std::string fullList;
 			for(int i = 0; i < size; i++)
 			{
-				if(i == size - 1)
+				fullList += std::to_string(numList[i]);
+				if(i != size - 1)
 				{
-					createNewLog(std::__cxx11::to_string(numList[i]) + "\n\n", false, numList, size);
-				}
-				else if (i < size)
-				{
-					createNewLog(std::__cxx11::to_string(numList[i]) + "-", false, numList, size);
+					fullList += '-';
 				}
 			}
+			
+			fullList += "\n\n";
+			createNewLog(fullList);
 		};
 };
 
+// Declaring Functioons
 void startUpMessage();
 void fillList(int nums[], int size);
 
+
+// Main Function
 int main()
 {
+	srand(time(NULL)); // generate new random seed for the random number generator
+
+	// Instantiate all necessary variables
 	Logger Logs;
-	srand(time(NULL));
-	
 	int arraySize = 50;
 	int* numberList = new int[arraySize];
 	
@@ -129,7 +142,6 @@ int main()
 				break;
 			case 2: // User will randomly generate the list with numbers
 				delete[] numberList;
-				
 				cout << "How much numbers would you like to generate? (10-999): ";
 				
 				// Make the user give a valid input from 10 -> Whatever the LIMIT is
@@ -137,8 +149,8 @@ int main()
 					cin >> arraySize;
 					std::cin.clear(); // clear any error flags at cin.
 					std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // skip to new line and proceed with the program for no further issues.
-					arraySize < 10 || arraySize > LIMIT ? cout << "\nError, please input a valid number from 10-999: " : cout << "";
-				}while(arraySize < 10 || arraySize > LIMIT);
+					arraySize < 10 || arraySize > 999 ? cout << "\nError, please input a valid number from 10-999: " : cout << "";
+				}while(arraySize < 10 || arraySize > 999);
 				
 				// Free memory, then fill the list again.
 				numberList = new int[arraySize];
@@ -203,7 +215,6 @@ void startUpMessage()
 void fillList(int nums[], int size)
 {
 	// Generate New Numbers
-	
 	cout << "Generating numbers...\n";
 	for(int i = 0; i < size; ++i)
 	{
