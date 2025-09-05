@@ -49,11 +49,11 @@ void viewNumbers(int numList[], int size)
 	{
 		if(i == size - 1)
 		{
-			std::cout << numList[i];			
+			std::cout << numList[i]; // output this message if i is the last number in the list	
 		}
 		else
 		{
-			std::cout << numList[i] << ", " ;
+			std::cout << numList[i] << ", " ; // output this message if i is NOT the last number in the list
 		}
 	}
 	

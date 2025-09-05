@@ -24,12 +24,12 @@ class Logger
 	private:
 		// Time Stamp
 		std::time_t tt = system_clock::to_time_t(system_clock::now());
-		std::string timeStamp = ctime(&tt);
+		std::string timeStamp = ctime(&tt); // returns a string of the time stamp
 		
 		// File Name
-		tm local_tm = *localtime(&tt);
-		std::ostringstream oss;
-		std::string fileName;
+		tm local_tm = *localtime(&tt); // returns the local time stamp
+		std::ostringstream oss; // used for concatenating strings and integers.
+		std::string fileName; 
 		std::string pathFile = "Logs/";
 	public:
 		
@@ -144,7 +144,7 @@ int main()
 				delete[] numberList;
 				cout << "How much numbers would you like to generate? (10-999): ";
 				
-				// Make the user give a valid input from 10 -> Whatever the LIMIT is
+				// Make the user give a valid input from 10 -> Whatever 999 is
 				do{
 					cin >> arraySize;
 					std::cin.clear(); // clear any error flags at cin.
